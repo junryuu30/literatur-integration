@@ -1,0 +1,59 @@
+*{
+    font-family: 'Times New Roman', Times, serif;
+}
+
+
+.bg-black {
+    background-color: black !important; 
+}
+
+.bg-grayinput{
+    background-color: 210, 210, 210, 0.25 !important;
+}
+
+.h-page {
+    min-height: 100vh;
+}
+
+.nav{
+    min-height: 13vh;
+}
+
+.pages{
+    min-height: 87vh;
+}
+
+.profile-page{
+    min-height: 100vh;
+}
+
+.bg-maroon {
+    background-color: #af1400 !important;
+    border-color: #af1400 !important;
+}
+
+.bg-grayblack {
+    background-color: #252525;
+    ;
+}
+
+.Form {
+    background-color: #BCBCBC !important;
+}
+
+.img-profile{
+    position: absolute;
+    left: 70px;
+    width: 40px;
+
+}
+
+
+.profile-detail{
+    background-color: #252525;
+    margin: 20px;
+}
+
+.profile-wrap{
+    margin-bottom: 30px;
+}
