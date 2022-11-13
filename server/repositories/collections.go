@@ -32,6 +32,7 @@ func (r *repository) FindCollection() ([]models.Collection, error) {
 func (r *repository) GetCollection(ID int) (models.Collection, error) {
 	var collection models.Collection
 	err := r.db.Preload("User").Preload("Literatur.User").First(&collection, ID).Error
+	// err := r.db.Preload("User").Preload("Literatur.User").Where("user_id = ?", UserID).Find(&collection).Error
 
 	return collection, err
 }

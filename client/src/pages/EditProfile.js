@@ -9,10 +9,11 @@ import { API } from "../config/api";
 const EditProfile = () => {
     
     const navigate = useNavigate()
-    const [state, dispatch] = useContext(UserContext)
+    const [state] = useContext(UserContext)
     const [preview, setPreview] = useState(null)
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState(
+    {
         fullname:"",
         email:"",
         password:"",
@@ -20,10 +21,9 @@ const EditProfile = () => {
         phone:"",
         image:"",
     })
-    // console.log("ini formmm", form)
+    
 
-    let { data: userprofile } = useQuery("editprofileCache"
-    , async ()=>{
+    let { data: userprofile } = useQuery("editprofileCache", async ()=>{
         const response = await API.get(`user/${state.user.id}`);
 
         console.log("data sebelum di editprofile", response.data.data)
@@ -36,6 +36,7 @@ const EditProfile = () => {
             setPreview(userprofile.image);
             setForm({
                 ...form,
+                id: userprofile.id,
                 fullname: userprofile.fullname,
                 email: userprofile.email,
                 password: userprofile.password,
@@ -58,31 +59,8 @@ const EditProfile = () => {
         }
     }
 
-    // const handleSubmit = async (e) => {
-    //     try {
-    //         e.preventDefault();
+    console.log(form);
 
-    //         // Store data with FormData as object
-    //         const formData = new FormData();
-    //         if (form.image) {
-    //             formData.set("image", form?.image[0], form?.image[0]?.name);
-    //         }
-    //         formData.set("fullName", form.fullname);
-    //         formData.set("email", form.email);
-    //         formData.set("phone", form.phone);
-    //         formData.set("location", form.location);
-
-    //         // Insert product data
-            
-    //         // const response = await API.patch("/user/" + userprofile.id, formData);
-    //         const response = await API.patch(`user/${state.user.id}`, formData);
-    //         console.log("data setelah di edit mana woy", response)
-
-    //         navigate("/profile");
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
     const handleSubmit = async (e) => {
         try {
           e.preventDefault();
@@ -93,24 +71,24 @@ const EditProfile = () => {
           if (form.image) {
             formData.set("image", form?.image[0], form?.image[0]?.name);
           }
-            formData.set("fullName", form.fullname);
+            formData.set("fullname", form.fullname);
             formData.set("email", form.email);
             formData.set("phone", form.phone);
-            formData.set("location", form.location);
+            formData.set("address", form.address);
     
           // Insert product data
-          const response = await API.patch("/user/" + state.user.id, formData);
+          const response = await API.patch(`/user/${form.id}`, formData);
     
-          const auth = await API.get("/check-auth");
-          // console.log(response);
+        //   const auth = await API.get("/check-auth");
+        //   // console.log(response);
     
-          let payload = auth.data.data;
-          payload.token = localStorage.token;
+        //   let payload = auth.data.data;
+        //   payload.token = localStorage.token;
     
-          dispatch({
-            type: "USER_SUCCESS",
-            payload,
-          });
+        //   dispatch({
+        //     type: "USER_SUCCESS",
+        //     payload,
+        //   });
     
           console.log("ini data updated user", response.data);
           navigate("/profile");
@@ -130,11 +108,11 @@ const EditProfile = () => {
                 <h3 className="text-white mb-4 mt-5">Edit Profile</h3>
                     <Col>
                         <Form
-                            onSubmit={(e) => handleSubmit.mutate(e)}
+                            onSubmit={(e) => handleSubmit(e)}
                             // onSubmit={(e) => handleSubmit.mutate(e)}
                         >
                             <Form.Group className="mb-4" >
-                                <FloatingLabel label='Title' controlId="floatingInput">
+                                <FloatingLabel label='Full Name' controlId="floatingInput">
                                     <Form.Control 
                                     value={form?.fullname} 
                                     onChange={handleChange} 

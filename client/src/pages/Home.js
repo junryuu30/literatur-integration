@@ -31,15 +31,15 @@ const Home = () => {
             <div className="col-lg-6 col-md-6 col-12 order-lg-1 order-2">
               <h1 className="title fw-bold text-light display-2">source of intelligence</h1>
               <h5 className="description text-light my-lg-4 my-3 text-justify">Sign-up and receive unlimited accesss to all of your literatur - share your literature.</h5>
-              <Button className="btn bg-maroon text-white fw-bold me-3 ps-3" 
+              <Button className="btn bg-maroon text-white fw-bold me-3 px-5" 
               onClick={() => setModalRegister(true)}
-              style={{padding:"10px"}}
+              // style={{padding:"10px"}}
               >
                 Sign Up
               </Button>
-              <Button className="btn btn-light text-dark fw-bold" 
+              <Button className="btn btn-light text-dark fw-bold px-5" 
               onClick={() => setModalLogin(true)}
-              style={{padding:"10px"}}
+              // style={{padding:"10px"}}
               >
                 Sign In
               </Button>

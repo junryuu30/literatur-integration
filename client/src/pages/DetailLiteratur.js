@@ -12,38 +12,62 @@ function DetailLiteratur() {
 
     const [state] = useContext(UserContext);
 
-    const params = useParams()
+
+    let { id } = useParams();
+
+    // const params = useParams()
     const navigate = useNavigate()
     // console.log("ini params......", params)
 
     let { data: detailliteratur } = useQuery("detailCache", async ()=> {
-        const response = await API.get(`literatur/${params.id}`)
+
+        const response = await API.get("/literatur/" + id);
+        // const response = await API.get(`literatur/${params.id}`)
         // console.log("mana datanya yang detaillll", response.data.data)
         return response.data.data
 
     })
 
-    const handleOnSave = async (e, literaturID) => {
-        e.preventDefault();
+    // const handleOnSave = async (e, literaturID) => {
+    //     e.preventDefault();
+    //     try {
+    //         console.log("collection yang ini :", state.user.id)
+
+    //         const config = {
+    //             headers: {
+    //                 Authorization: `Bearer ${localStorage.token}`,
+    //             },
+    //         };
+    //         console.log("data check literatur", literaturID, state.user.id);
+
+    //         const response = await API.post("/collection", {
+    //             literatur_id: parseInt(literaturID),
+    //             user_id: parseInt(state.user.id),
+    //         }, config);
+    //         console.log("response post collection", response)
+    //     } catch (error) {
+    //         console.log("ini error di post collection", error)
+    //     }
+    // }
+
+    const handleSubmit = async (e) => {
         try {
-            console.log("collection yang ini :", state.user.id)
+            e.preventDefault();
 
             const config = {
                 headers: {
-                    Authorization: `Bearer ${localStorage.token}`,
+                    "Content-type": "application/json",
                 },
             };
-            console.log("data check literatur", literaturID, state.user.id);
-
-            const response = await API.post("/collection", {
-                literatur_id: parseInt(literaturID),
-                user_id: parseInt(state.user.id),
-            }, config);
-            console.log("response post collection", response)
+            const body = JSON.stringify({
+                literatur_id: parseInt(id),
+            });
+            await API.post("/collection", body, config);
+            navigate("/my-collection");
         } catch (error) {
-            console.log("ini error di post collection", error)
+            console.log(error);
         }
-    }
+    };
 
 
   return (
@@ -77,17 +101,22 @@ function DetailLiteratur() {
                                     <h6 className='text-white'>{detailliteratur?.isbn}</h6>
                                 </div>
 
-                                <Button className="bg-maroon btn-auth w-30 mb-3">
+                                {/* <Button className="bg-maroon btn-auth w-30 mb-3">
                                     Download
-                                </Button>
-                                {/* <a href='{detailliteratur?.attache}'
-                                    className="bg-maroon btn-auth w-30 mb-3"
-                                    style={{}}
-                                >  Download</a> */}
+                                </Button> */}
+                                <a href={detailliteratur?.attache}
+                                    className="bg-maroon btn-auth w-30 mb-3 py-3 text-white"
+                                    style={{paddingLeft:"10px", paddingRight:"10px", borderRadius:"10px", textDecoration:"none"}}
+                                >  Read and Download</a>
+
+                                {/* <a 
+                                style={{ color: "white", textDecoration: "none" }} 
+                                href={detailliteratur?.attache} target="_blank" className="bg-maroon">
+                                    Download</a> */}
                             </Col>
                             <Col>
-                                <Button className="bg-maroon btn-auth w-30 mb-3"
-                                onClick={handleOnSave}
+                                <Button className="bg-maroon btn-auth w-30 my-4 py-2"
+                                onClick={handleSubmit}
                                 >
                                     Add My Collection
                                 </Button>

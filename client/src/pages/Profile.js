@@ -7,49 +7,65 @@ import gender from "../assets/gender.png";
 import tlpn from "../assets/tlpn.png";
 import maps from "../assets/maps.png";
 import jen from "../assets/jen.jpg";
-import { dataJurnal } from "../dummyData/dataJurnal";
-import fakepdf from "../assets/fakePdf.png";
 import AllNavbar from "../components/AllNavbar";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { API } from "../config/api";
 import { UserContext } from "../components/context/userContext";
 
 const Profile = () => {
-  const [state, dispatch] = React.useContext(UserContext);
-
-  const params = useParams();
+  const [state] = React.useContext(UserContext);
+  console.log("ini stateeee", state);
+  // const params = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState();
 
-  // console.log("data apa ini", state.user)
-  // console.log("data email respon login", state.user.email)
+  var idid = state.user.id;
 
-  let { data: literaturbyuser } = useQuery("literaturbyuserCache", async () => {
-    const responseliteratur = await API.get(
-      `/literaturs/user/${params.id ? params.id : user.id}`
-    );
-    // console.log("ini dataatata my literatur.data2:", responseliteratur.data.data)
+  let { data: literaturbyuser, refetch } = useQuery(
+    "literaturbyuserCache",
+    async () => {
+      const responseliteratur = await API.get(`/user/${id}`);
+      // `/literaturs/user/${params.id ? params.id : user.id}`
+      // console.log("ini dataatata my lit  eratur.data2:", responseliteratur.data.data)
+      return responseliteratur.data.data;
+    }
+  );
+
+  // LITERATURby user
+  let { data: literturID } = useQuery("literaturbyuserCache2", async () => {
+    const responseliteratur = await API.get(`/literaturs/user/${state.user.id}`);
+    console.log("jhihan user id,", state.user.id);
+    console.log("jihan response literature hehe,", responseliteratur.data.data);
     return responseliteratur.data.data;
   });
   // console.log("ini data literatur id", literaturbyuser)
 
+  console.log(literturID);
+
   const getUser = async () => {
     try {
-      const response = await API.get("/user/" + state.user.id);
+      const response = await API.get("/user/" + state?.user?.id);
       // console.log("data get user", response.data.data)
       // const response = await API.get(`/user/${state.user.id}`)
       setUser(response.data.data);
+      console.log(`func getUser : ${response.data.data}`);
     } catch (err) {
       console.log(err);
     }
   };
 
+  // React.useEffect(() => {
+  //   if (state.user) {
+  //     getUser();
+  //   }
+  // }, [state]);
+
   React.useEffect(() => {
-    if (state.user) {
-      getUser();
-    }
-  }, [state]);
+    getUser();
+    refetch();
+  }, []);
   return (
     <>
       <AllNavbar />
@@ -84,7 +100,8 @@ const Profile = () => {
                 </Col>
                 <Col className="col-11">
                   <p className="ff-avn fs-14 fw-bold m-0">
-                    {user?.gender ? user?.gender : "unknown"}
+                    {/* {user?.gender ? user?.gender : "unknown"} */}
+                    {state.user?.gender}
                   </p>
                   <p className="fs-12" style={{ color: "#8A8C90" }}>
                     Gender
@@ -101,7 +118,8 @@ const Profile = () => {
                 </Col>
                 <Col className="col-11">
                   <p className="ff-avn fs-14 fw-bold m-0">
-                    {user?.phone ? user?.phone : "unknown"}
+                    {/* {user?.phone ? user?.phone : "unknown"} */}
+                    {state.user?.phone}
                   </p>
                   <p className="fs-12" style={{ color: "#8A8C90" }}>
                     Mobile Phone
@@ -118,7 +136,8 @@ const Profile = () => {
                 </Col>
                 <Col className="col-11">
                   <p className="ff-avn fs-14 fw-bold m-0">
-                    {user?.address ? user?.address : "unknown"}
+                    {/* {user?.address ? user?.address : "unknown"} */}
+                    {state.user?.address}
                   </p>
                   <p className="fs-12" style={{ color: "#8A8C90" }}>
                     Adress
@@ -129,15 +148,21 @@ const Profile = () => {
 
             <Col className="col-lg-3">
               <div>
-                <img src={jen} alt="" style={{ width: "100%" }} />
+                {/* <img src={user?.image ? user?.image : jen} alt="" style={{ width: "100%" }} /> */}
+                <img src={state.user?.image} alt="" style={{ width: "100%" }} />
               </div>
-              <Button
+              {/* <Button
                 className="mt-3 bg-maroon"
                 style={{ width: "100%" }}
                 onClick={() => navigate("/edit-profile")}
               >
                 Change Profile
-              </Button>
+              </Button> */}
+              <Link to={`/edit-profile/${state.user.id}`}>
+                <Button className="mt-3 bg-maroon" style={{ width: "100%" }}>
+                  Change Profile
+                </Button>
+              </Link>
             </Col>
           </Row>
           {/* ========================================================== */}
@@ -146,8 +171,11 @@ const Profile = () => {
             <Col className="mt-3">
               <h2 className="text-white mb-4">My Literature</h2>
               <Row>
-                {literaturbyuser?.map((item, index) => (
-                  <Col key={index} className="col-lg-3 d-flex align-items-start">
+                {literturID?.map((item, index) => (
+                  <Col
+                    key={index}
+                    className="col-lg-3 d-flex align-items-start"
+                  >
                     <div
                       className="card-sr text-white"
                       style={{ width: "200px" }}

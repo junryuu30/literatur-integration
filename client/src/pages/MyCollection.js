@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Col, Container, Row } from "react-bootstrap"
 import { dataJurnal } from "../dummyData/dataJurnal"
 import fakepdf from "../assets/fakePdf.png"
@@ -10,18 +10,36 @@ import { API } from "../config/api"
 
 const MyCollection = () => {
     const navigate = useNavigate()
-    const params = useParams();
+    // const params = useParams();
+    const { id } = useParams()
+
     const [user, setUser] = useState(null);
     const [state, dispatch] = useContext(UserContext);
+    const[collection,setCollection]= useState()
 
 
-    let { data: collectionbyuser } = useQuery("collectionbyuserCache", async () => {
-        const response = await API.get(
-          `/collection/${params.id ? params.id : user.id}`
-        );
-        // console.log("ini dataatata my literatur.data2:", responseliteratur.data.data)
-        return response.data.data;
+    let { data: collectionbyuser } = useQuery("collectionbyuseCache", async () => {
+        const response = await API.get("/collections");
+        const response2 = response.data.data.filter(
+            (p) => p.user.id == state.user.id
+          );
+        // console.log("ini data collection id",response)
+        // return response.data.data;
+        setCollection(response2)
+        
       });
+    // const getCollection = async () =>{
+    //     try {
+    //         const response = await API.get("/collections")
+    //     setCollection(response.data.data)
+    //     } catch (error) {
+    //         console.log(error);
+            
+    //     }
+    // }
+    // useEffect(()=>{
+    //     getCollection()
+    // },[])
 
     return(
         <>
@@ -32,7 +50,7 @@ const MyCollection = () => {
                 <Row>
                 <Col className="mt-3">
                 <Row>
-                        {collectionbyuser?.map((item, index)=>(
+                        {collection?.map((item, index)=>(
                             <Col key={index} 
                             onClick={() => navigate(`/detail-literature/${item?.id}`)}
                             className="col-lg-3"
@@ -54,7 +72,7 @@ const MyCollection = () => {
 
                         </Row>
                     {/* ================ */}
-                        <Row>
+                        {/* <Row>
                         {dataJurnal.map((item, index)=>(
                             <Col key={index} onClick={() => navigate(`/detail-literature/${item?.id}`)}
                             className="col-lg-3"
@@ -74,7 +92,7 @@ const MyCollection = () => {
                             </Col>
                         ))}
 
-                        </Row>
+                        </Row> */}
                         
                         
                     </Col>

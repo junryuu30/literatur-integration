@@ -3,7 +3,7 @@ package models
 type Literatur struct {
 	ID              int                  `json:"id" gorm:"primary_key:auto_increment"`
 	Title           string               `json:"title" form:"title" gorm:"type: varchar(255)"`
-	UserID          int                  `json:"-"`
+	UserID          int                  `json:"user_id"`
 	User            UsersProfileResponse `json:"user"`
 	PublicationDate string               `json:"publicationdate" form:"publication_date" gorm:"type: varchar(255)"`
 	Pages           int                  `json:"pages" form:"pages" gorm:"type: varchar(255)"`
@@ -16,7 +16,7 @@ type Literatur struct {
 type LiteraturResponse struct {
 	ID              int                  `json:"id"`
 	Title           string               `json:"title"`
-	UserID          int                  `json:"-"`
+	UserID          int                  `json:"user_id"`
 	User            UsersProfileResponse `json:"user"`
 	PublicationDate string               `json:"publication_date"`
 	Pages           int                  `json:"pages"`
@@ -27,14 +27,15 @@ type LiteraturResponse struct {
 }
 
 type LiteraturUserResponse struct {
-	ID              int    `json:"id"`
-	Title           string `json:"title"`
-	PublicationDate string `json:"publication_date"`
-	Pages           int    `json:"pages"`
-	ISBN            string `json:"isbn"`
-	Author          string `json:"author"`
-	Attache         string `json:"attache"`
-	UserID          int    `json:"-"`
+	ID              int                  `json:"id"`
+	Title           string               `json:"title"`
+	PublicationDate string               `json:"publication_date"`
+	Pages           int                  `json:"pages"`
+	ISBN            string               `json:"isbn"`
+	Author          string               `json:"author"`
+	Attache         string               `json:"attache"`
+	UserID          int                  `json:"-"`
+	User            UsersProfileResponse `json:"user"`
 }
 
 func (LiteraturResponse) TableName() string {

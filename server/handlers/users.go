@@ -2,6 +2,7 @@ package handlers
 
 import (
 	// "context"
+	"context"
 	"encoding/json"
 	dto "literature/dto/result"
 	userdto "literature/dto/users"
@@ -10,12 +11,15 @@ import (
 	"literature/pkg/bcrypt"
 	"literature/repositories"
 	"net/http"
+	"os"
 
 	// "os"
 	"strconv"
 
 	// "github.com/cloudinary/cloudinary-go/v2"
 	// "github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
@@ -82,6 +86,102 @@ func convertResponse(u models.User) userdto.UserResponse {
 	}
 }
 
+// func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+
+// 	dataContext := r.Context().Value("dataFile")
+// 	filepath := ""
+// 	if dataContext != nil {
+// 		filepath = dataContext.(string)
+// 	}
+
+// 	request := usersdto.UpdateUserRequest{
+// 		Email:    r.FormValue("email"),
+// 		Password: r.FormValue("password"),
+// 		FullName: r.FormValue("fullname"),
+// 		Gender:   r.FormValue("gender"),
+// 		Phone:    r.FormValue("phone"),
+// 		Address:  r.FormValue("address"),
+// 		Image:    filepath,
+// 	}
+
+// 	// var ctx = context.Background()
+// 	// var CLOUD_NAME = os.Getenv("CLOUD_NAME")
+// 	// var API_KEY = os.Getenv("API_KEY")
+// 	// var API_SECRET = os.Getenv("API_SECRET")
+
+// 	// cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
+
+// 	// resp, err := cld.Upload.Upload(ctx, filepath, uploader.UploadParams{Folder: "goLiteratur"})
+
+// 	// if err != nil {
+// 	// 	w.WriteHeader(http.StatusBadRequest)
+// 	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+// 	// 	json.NewEncoder(w).Encode(response)
+// 	// 	return
+// 	// }
+
+// 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+// 	// fmt.Println(id)
+// 	user, err := h.UserRepository.GetUser(int(id))
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+// 		json.NewEncoder(w).Encode(response)
+// 		return
+// 	}
+
+// 	password, err := bcrypt.HashingPassword(request.Password)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusInternalServerError)
+// 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+// 		json.NewEncoder(w).Encode(response)
+// 	}
+
+// 	if request.FullName != "" {
+// 		user.FullName = request.FullName
+// 	}
+
+// 	if request.Email != "" {
+// 		user.Email = request.Email
+// 	}
+
+// 	if request.Password != "" {
+// 		user.Password = password
+// 	}
+
+// 	if request.Gender != "" {
+// 		user.Gender = request.Gender
+// 	}
+
+// 	if request.Phone != "" {
+// 		user.Phone = request.Phone
+// 	}
+
+// 	if request.Image != "" {
+// 		// user.Image = resp.SecureURL
+// 		user.Image = filepath
+// 	}
+
+// 	if request.Address != "" {
+// 		user.Address = request.Address
+// 	}
+
+// 	data, err := h.UserRepository.UpdateUser(user)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusInternalServerError)
+// 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+// 		json.NewEncoder(w).Encode(response)
+// 		return
+// 	}
+
+// 	w.WriteHeader(http.StatusOK)
+// 	response := dto.SuccessResult{Code: http.StatusOK, Data: data}
+// 	json.NewEncoder(w).Encode(response)
+// }
+
+// ==================
+
 func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -92,33 +192,31 @@ func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	request := usersdto.UpdateUserRequest{
+		FullName: r.FormValue("fullName"),
 		Email:    r.FormValue("email"),
 		Password: r.FormValue("password"),
-		FullName: r.FormValue("fullname"),
 		Gender:   r.FormValue("gender"),
 		Phone:    r.FormValue("phone"),
 		Address:  r.FormValue("address"),
-		Image:    filepath,
 	}
 
-	// var ctx = context.Background()
-	// var CLOUD_NAME = os.Getenv("CLOUD_NAME")
-	// var API_KEY = os.Getenv("API_KEY")
-	// var API_SECRET = os.Getenv("API_SECRET")
+	var ctx = context.Background()
+	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
+	var API_KEY = os.Getenv("API_KEY")
+	var API_SECRET = os.Getenv("API_SECRET")
 
-	// cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
+	cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
 
-	// resp, err := cld.Upload.Upload(ctx, filepath, uploader.UploadParams{Folder: "goLiteratur"})
+	resp, err := cld.Upload.Upload(ctx, filepath, uploader.UploadParams{Folder: "goLiteratur"})
 
-	// if err != nil {
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-	// 	json.NewEncoder(w).Encode(response)
-	// 	return
-	// }
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
-	// fmt.Println(id)
 	user, err := h.UserRepository.GetUser(int(id))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -154,9 +252,8 @@ func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		user.Phone = request.Phone
 	}
 
-	if request.Image != "" {
-		// user.Image = resp.SecureURL
-		user.Image = filepath
+	if filepath != "" {
+		user.Image = resp.SecureURL
 	}
 
 	if request.Address != "" {
@@ -175,6 +272,8 @@ func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	response := dto.SuccessResult{Code: http.StatusOK, Data: data}
 	json.NewEncoder(w).Encode(response)
 }
+
+// =====================
 
 func (h *handlerUser) FindUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

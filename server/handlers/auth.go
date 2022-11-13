@@ -111,6 +111,7 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	//generate token
 	claims := jwt.MapClaims{}
 	claims["user_id"] = user.ID
+	claims["name"] = user.FullName
 	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // 2 hours expired
 
 	token, errGenerateToken := jwtToken.GenerateToken(&claims)
@@ -126,6 +127,10 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 		Password: user.Password,
 		Status:   user.Status,
 		Token:    token,
+		Gender:   user.Gender,
+		Phone:    user.Phone,
+		Address:  user.Address,
+		Image:    user.Image,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -154,6 +159,10 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 		Id:       user.ID,
 		FullName: user.FullName,
 		Email:    user.Email,
+		Gender:   user.Gender,
+		Phone:    user.Phone,
+		Address:  user.Address,
+		Image:    user.Image,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

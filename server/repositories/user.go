@@ -47,6 +47,35 @@ func (r *repository) GetUser(ID int) (models.User, error) {
 // 	return user, err
 // }
 
+// func (r *repository) CreateUser(user models.User) (models.User, error) {
+// 	// err := r.db.Create(&user).Error
+// 	// err := r.db.Preload("Journey").Preload("Journey.User").Preload("Bookmark.Journey.User").Preload("Bookmark.User").Create(&user).Error
+// 	err := r.db.Preload("Literatur").Preload("Literatur.User").Preload("Collection.Literatur.User").Preload("Collection.User").Create(&user).Error
+
+// 	return user, err
+// }
+
+// // func (r *repository) GetUser(ID int) (models.User, error) {
+// // 	var user models.User
+// // 	err := r.db.First(&user, ID).Error
+
+// // 	return user, err
+// // }
+
+// func (r *repository) FindUsers() ([]models.User, error) {
+// 	var users []models.User
+// 	err := r.db.Preload("Literatur").Preload("Literatur.User").Preload("Collection.Literatur.User").Preload("Collection.User").Find(&users).Error
+
+// 	return users, err
+// }
+
+// func (r *repository) GetUser(ID int) (models.User, error) {
+// 	var user models.User
+// 	err := r.db.Preload("Literatur").Preload("Literatur.User").Preload("Collection.Literatur.User").Preload("Collection.User").First(&user, ID).Error
+
+// 	return user, err
+// }
+
 func (r *repository) UpdateUser(user models.User) (models.User, error) {
 	err := r.db.Save(&user).Error
 
