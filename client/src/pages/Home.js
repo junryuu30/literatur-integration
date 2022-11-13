@@ -5,7 +5,7 @@ import logo from "../assets/logo.svg"
 import headerimg from "../assets/headerimg.svg"
 
 import { useNavigate } from "react-router-dom";
-import { Container, Navbar } from "react-bootstrap";
+import { Button, Container, Navbar } from "react-bootstrap";
 import Login2 from "../components/Auth/Login2";
 import Register2 from "../components/Auth/Register2";
 
@@ -31,16 +31,18 @@ const Home = () => {
             <div className="col-lg-6 col-md-6 col-12 order-lg-1 order-2">
               <h1 className="title fw-bold text-light display-2">source of intelligence</h1>
               <h5 className="description text-light my-lg-4 my-3 text-justify">Sign-up and receive unlimited accesss to all of your literatur - share your literature.</h5>
-              <button className="btn bg-maroon text-white fw-bold w-30 me-3" 
+              <Button className="btn bg-maroon text-white fw-bold me-3 ps-3" 
               onClick={() => setModalRegister(true)}
+              style={{padding:"10px"}}
               >
                 Sign Up
-              </button>
-              <button className="btn btn-light text-dark fw-bold w-30" 
+              </Button>
+              <Button className="btn btn-light text-dark fw-bold" 
               onClick={() => setModalLogin(true)}
+              style={{padding:"10px"}}
               >
                 Sign In
-              </button>
+              </Button>
             </div>
             <div className="col-lg-6 col-md-6 col-12 order-lg-2 order-1 mb-lg-0 mb-3">
               <img src={headerimg} alt="book-img" width="100%" />

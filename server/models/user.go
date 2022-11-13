@@ -10,9 +10,9 @@ type User struct {
 	Address  string `json:"address" gorm:"type: varchar(255)"`
 	Image    string `json:"image" gorm:"type:varchar(255)"`
 
-	Literaturs []LiteraturUserResponse `json:"literatur"`
-	// Collections []CollectionResponse    `json:"collections"`
-	Status string `json:"status"`
+	Literaturs  []LiteraturUserResponse `json:"literatur"`
+	Collections []CollectionResponse    `json:"collections"`
+	Status      string                  `json:"status"`
 }
 
 type UsersProfileResponse struct {

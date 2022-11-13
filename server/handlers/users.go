@@ -3,7 +3,6 @@ package handlers
 import (
 	// "context"
 	"encoding/json"
-	"fmt"
 	dto "literature/dto/result"
 	userdto "literature/dto/users"
 	usersdto "literature/dto/users"
@@ -119,7 +118,7 @@ func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
-	fmt.Println(id)
+	// fmt.Println(id)
 	user, err := h.UserRepository.GetUser(int(id))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -195,7 +194,9 @@ func (h *handlerUser) FindUsers(w http.ResponseWriter, r *http.Request) {
 func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	// userId := int(userInfo["user_id"].(float64))
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	// id, _ := strconv.Atoi(mux.Vars(r)["user_id"])
 
 	user, err := h.UserRepository.GetUser(id)
 	if err != nil {

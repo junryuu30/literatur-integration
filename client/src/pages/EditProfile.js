@@ -99,7 +99,7 @@ const EditProfile = () => {
             formData.set("location", form.location);
     
           // Insert product data
-          const response = await API.patch("/user/" + userprofile.id, formData);
+          const response = await API.patch("/user/" + state.user.id, formData);
     
           const auth = await API.get("/check-auth");
           // console.log(response);

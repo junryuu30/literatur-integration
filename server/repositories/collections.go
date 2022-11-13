@@ -1,60 +1,49 @@
 package repositories
 
-// import (
-// 	"literature/models"
-// 	// "gorm.io/gorm"
-// )
+import (
+	"literature/models"
 
-// type CollectionRepository interface {
-// 	// AddToCollection(collection models.Collection) (models.Collection, error)
-// 	GetCollectionByID(ID int) (models.Collection, error)
-// 	GetCollectionByUserID(userID int) ([]models.Collection, error)
-// 	// GetCollectionByUser(userID int, literaturID int) (models.Collection, error)
-// 	// UpdateCollection(Collection models.Collection, userID int, literaturID int)
-// 	DeleteCollectionByID(Collection models.Collection, ID int) (models.Collection, error)
-// }
+	"gorm.io/gorm"
+)
 
-// func RepositoryCollection(db *gorm.DB) *repository {
-// 	return &repository{db}
-// }
+type CollectionRepository interface {
+	CreateCollection(User models.Collection) (models.Collection, error)
+	FindCollection() ([]models.Collection, error)
+	GetCollection(ID int) (models.Collection, error)
+	UpdateCollection(User models.Collection) (models.Collection, error)
+	DeleteCollection(User models.Collection) (models.Collection, error)
+}
 
-// // func (r *repository) AddToCart(cart models.Cart) (models.Cart, error) {
-// // 	err := r.db.Create(&cart).Preload("User").Preload("Products").Error
+func RepositoryCollection(db *gorm.DB) *repository {
+	return &repository{db}
+}
 
-// // 	return cart, err
-// // }
+func (r *repository) CreateCollection(collection models.Collection) (models.Collection, error) {
+	err := r.db.Preload("User").Preload("Literatur.User").Create(&collection).Error
+	return collection, err
+}
 
-// func (r *repository) GetCollections(collections []models.Collection) ([]models.Collection, error) {
-// 	err := r.db.Preload("User").Preload("Products").Find(&collections).Error
+func (r *repository) FindCollection() ([]models.Collection, error) {
+	var collection []models.Collection
+	err := r.db.Preload("User").Preload("Literatur.User").Find(&collection).Error
+	return collection, err
+}
 
-// 	return collections, err
-// }
+func (r *repository) GetCollection(ID int) (models.Collection, error) {
+	var collection models.Collection
+	err := r.db.Preload("User").Preload("Literatur.User").First(&collection, ID).Error
 
-// func (r *repository) GetCollection(collection models.Collection, ID int) (models.Collection, error) {
-// 	err := r.db.Preload("User").Preload("Literaturs").First(&collection, ID).Error
+	return collection, err
+}
 
-// 	return collection, err
-// }
+func (r *repository) UpdateCollection(collection models.Collection) (models.Collection, error) {
+	err := r.db.Preload("User").Preload("Literatur.User").Save(&collection).Error
 
-// func (r *repository) GetCollectionExist(userID int, literaturID int) (models.Collection, error) {
-// 	var collection models.Collection
-// 	err := r.db.Preload("User").Preload("Literatur").First(&collection, "user_id=? and _id=?", userID, literaturID).Error
+	return collection, err
+}
 
-// 	return collection, err
-// }
+func (r *repository) DeleteCollection(collection models.Collection) (models.Collection, error) {
+	err := r.db.Preload("User").Preload("Literatur.User").Delete(&collection).Error
 
-// // func (r *repository) UpdateCartQty(cart models.Cart, ID int) (models.Cart, error) {
-// // 	err := r.db.Model(&cart).Where("id=?", ID).Preload("User").Preload("Products").Updates(&cart).Error
-
-// // 	return cart, err
-// // }
-
-// func (r *repository) DeleteCollectionByID(collection models.Collection, ID int) (models.Collection, error) {
-// 	err := r.db.Delete(&collection, "id=?", ID).Preload("Literaturs").Preload("User").Error
-// 	return collection, err
-// }
-
-// func (r *repository) DeleteCollectionByUser(collection models.Collection, userID int) error {
-// 	err := r.db.Preload("Literaturs").Preload("User").Delete(&collection, "user_id=?", userID).Error
-// 	return err
-// }
+	return collection, err
+}

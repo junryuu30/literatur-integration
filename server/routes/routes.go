@@ -6,4 +6,5 @@ func RouteInit(r *mux.Router) {
 	UserRoutes(r)
 	AuthRoutes(r)
 	LiteraturRoutes(r)
+	CollectionRoutes(r)
 }

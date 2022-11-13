@@ -138,8 +138,8 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
-	// userId := int(userInfo["user_id"].(float64))
-	userId := int(userInfo["id"].(float64))
+	userId := int(userInfo["user_id"].(float64))
+	// userId := int(userInfo["id"].(float64))
 
 	// Check User by Id
 	user, err := h.AuthRepository.GetUser(userId)
