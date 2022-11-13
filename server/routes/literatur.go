@@ -14,15 +14,14 @@ func LiteraturRoutes(r *mux.Router) {
 
 	h := handlers.HandlerLiteratur(LiteraturRepository)
 
-	// r.HandleFunc("/literatur", middleware.Auth(middleware.UploadFile(h.CreateLiteratur))).Methods("POST")
 	r.HandleFunc("/literaturs", h.FindLiteraturs).Methods("GET")
 
-	// r.HandleFunc("/literatur", middleware.Auth(middleware.UploadCover(middleware.UploadPDF(h.CreateLiteratur)))).Methods("POST")
-
-	r.HandleFunc("/literaturs/{userId}", middleware.Auth(h.GetLiteraturByUserID)).Methods("GET")
+	r.HandleFunc("/literaturs/user/{userId}", middleware.Auth(h.GetLiteraturByUserID)).Methods("GET")
 
 	r.HandleFunc("/literatur", middleware.Auth(middleware.UploadCover(middleware.UploadPDF(h.CreateLiteratur)))).Methods("POST")
 
 	r.HandleFunc("/literatur/{id}", h.GetLiteratur).Methods("GET")
+
+	r.HandleFunc("/literatur/{id}", middleware.Auth(h.DeleteLiteratur)).Methods("DELETE")
 
 }

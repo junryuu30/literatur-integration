@@ -12,12 +12,17 @@ const AllNavbar = () => {
   const [user, setUser] = useState(null);
 
   const getUser = async () => {
-    const response = await API.get(`/user/${state.user.id}`);
+    try{
+      const response = await API.get(`/user/${state.user.id}`);
 
-    setUser(response.data.data.data);
-    console.log("isi response", response);
+      setUser(response.data.data.data);
+      // console.log("isi response", response);
+    } catch(err) {
+console.log(err)
+    }
+   
   };
-  console.log(user, "isi user");
+  // console.log(user, "isi user");
 
   useEffect(() => {
     if (state.user) {
@@ -37,16 +42,16 @@ const AllNavbar = () => {
         <Navbar className="bg-black nav" bg="dark" variant="dark">
           <Container>
             <Nav className="me-auto">
-              <Nav.Link href="#home"
+              <Nav.Link
                 onClick={() => navigate("/profile")}
               >Profile</Nav.Link>
-              <Nav.Link href="#features"
+              <Nav.Link
               onClick={() => navigate("/my-collection")}
               >My Collection</Nav.Link>
-              <Nav.Link href="#pricing"
+              <Nav.Link
               onClick={() => navigate("/add-literature")}
               >Add Literature</Nav.Link>
-              <Nav.Link href="#pricing"
+              <Nav.Link
               // onClick={()=> navigate('/')}
               onClick={handleLogut}
               >Logout</Nav.Link>

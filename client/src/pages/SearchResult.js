@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, Col, Container, Form, InputGroup, Row } from 'react-bootstrap'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
@@ -12,6 +12,7 @@ import { API } from '../config/api'
 
 function SearchResult() {
     const navigate = useNavigate()
+    const [query, setQuery] = useState("")
 
     let { data: searchs }= useQuery('searchliteraturCache',
       async() => {
@@ -33,6 +34,7 @@ function SearchResult() {
                                 type="text"
                                 placeholder="Search for literatur"
                                 className=""
+                                onChange={(e)=> setQuery(e.target.value)}
                                 />
                             </InputGroup>
                             <div>
@@ -54,12 +56,19 @@ function SearchResult() {
                     <Col className="mt-3">
                         <Row>
 
-                        {searchs?.map((item, index)=>(
+                        {/* {searchs?.map((item, index)=>( */}
+                        
+                        {searchs?.filter((item)=>{
+                            return query.toLocaleLowerCase() === '' ? item : item.title.toLocaleLowerCase().includes(query);
+                        })
+                        .map((item, index)=>(
                             <Col key={index} 
                             // onClick={()=>navigate("/detail-literature")}
-                            onClick={() => navigate(`/detail-literature/${item?.id}`)}
+                            
                             >
-                        <div  className='card-sr text-white' style={{width:"200px"}}>
+                        <div  className='card-sr text-white' style={{width:"200px"}}
+                        onClick={() => navigate(`/detail-literature/${item?.id}`)}
+                        >
                             {/* <img alt="" src={fakepdf}/> */}
                             <img alt="" src={item?.cover}/>
                             <h4 className="mt-3">{item.title}</h4>

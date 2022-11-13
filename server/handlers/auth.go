@@ -59,6 +59,7 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		Gender:   request.Gender,
 		Phone:    request.Phone,
 		Address:  request.Address,
+		Status:   "user",
 	}
 
 	data, err := h.AuthRepository.Register(user)
@@ -120,8 +121,10 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	loginResponse := authdto.LoginResponse{
+		ID:       user.ID,
 		Email:    user.Email,
 		Password: user.Password,
+		Status:   user.Status,
 		Token:    token,
 	}
 
@@ -135,6 +138,7 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	// userId := int(userInfo["user_id"].(float64))
 	userId := int(userInfo["id"].(float64))
 
 	// Check User by Id
@@ -150,9 +154,6 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 		Id:       user.ID,
 		FullName: user.FullName,
 		Email:    user.Email,
-		Gender:   user.Gender,
-		Phone:    user.Phone,
-		Image:    user.Image,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

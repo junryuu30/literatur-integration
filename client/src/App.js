@@ -22,38 +22,27 @@ import { API, setAuthToken } from './config/api';
 
 function App() {
 
-  let navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Init user context here ...
   const [state, dispatch] = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true);
+  let navigate = useNavigate();
 
-  // Redirect Auth here ...
-  useEffect(() => {
-    // Redirect Auth
+  // useEffect(() => {
+  //   // Redirect Auth
+  //   if (localStorage.token) {
+  //     setAuthToken(localStorage.token);
+  //   }
+
+  //   if (state.isLogin === false && !isLoading) {
+  //     navigate("/");
+  //   }
+  // }, [state]);
+
+  const checkUser = async () => {
     if (localStorage.token) {
       setAuthToken(localStorage.token);
     }
-
-    if (state.isLogin == false && !isLoading) {
-      navigate("/");
-    } else {
-      if (state.user.status == "admin") {
-        navigate("/complain-admin");
-      } else if (state.user.status == "customer") {
-        navigate("/");
-      }
-    }
-  }, [state]);
-
-  // Create function for check user token here ...
-
-  // Call function check user with useEffect didMount here ...
-  const checkUser = async () => {
     try {
       const response = await API.get("/check-auth");
-      console.log("ni cek auth nayri token", response);
-
       // If the token incorrect
       if (response.status === 404) {
         return dispatch({
@@ -63,7 +52,6 @@ function App() {
 
       // Get user data
       let payload = response.data.data;
-      console.log("paylod login", payload);
       // Get token from local storage
       payload.token = localStorage.token;
 
@@ -72,10 +60,8 @@ function App() {
         type: "USER_SUCCESS",
         payload,
       });
-      setIsLoading(false);
     } catch (error) {
-      console.log(error);
-      setIsLoading(false);
+      // console.log(error);
     }
   };
 

@@ -79,6 +79,7 @@ const AddLiterature =()=> {
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Control type="number" placeholder="Pages"
                                 className="bg-grayinput rounded-0"
+                                onChange={handleChange} name="pages"
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicEmail">

@@ -138,6 +138,32 @@ func (h *handlerLiteratur) GetLiteratur(w http.ResponseWriter, r *http.Request) 
 
 }
 
+func (h *handlerLiteratur) DeleteLiteratur(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	literatur, err := h.LiteraturRepository.GetLiteratur(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	data, err := h.LiteraturRepository.DeleteLiteratur(literatur, id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Code: http.StatusOK, Data: data}
+	json.NewEncoder(w).Encode(response)
+}
+
 func (h *handlerLiteratur) FindLiteraturs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -174,4 +200,16 @@ func (h *handlerLiteratur) GetLiteraturByUserID(w http.ResponseWriter, r *http.R
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "Success", Data: literaturs}
 	json.NewEncoder(w).Encode(response)
+}
+
+func convertResponseLiteratur(u models.Literatur) models.LiteraturResponse {
+	return models.LiteraturResponse{
+		Title:           u.Title,
+		User:            u.User,
+		PublicationDate: u.PublicationDate,
+		Pages:           u.Pages,
+		ISBN:            u.ISBN,
+		Author:          u.Author,
+		Attache:         u.Attache,
+	}
 }

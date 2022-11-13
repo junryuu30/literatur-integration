@@ -3,6 +3,7 @@ package handlers
 import (
 	// "context"
 	"encoding/json"
+	"fmt"
 	dto "literature/dto/result"
 	userdto "literature/dto/users"
 	usersdto "literature/dto/users"
@@ -118,6 +119,7 @@ func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	fmt.Println(id)
 	user, err := h.UserRepository.GetUser(int(id))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

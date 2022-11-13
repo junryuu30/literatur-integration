@@ -11,6 +11,8 @@ type LiteraturRepository interface {
 	GetLiteratur(ID int) (models.Literatur, error)
 	CreateLiteratur(Literatur models.Literatur) (models.Literatur, error)
 	GetLiteraturByUserID(userID int) ([]models.Literatur, error)
+	DeleteLiteratur(literatur models.Literatur, ID int) (models.Literatur, error)
+	// DeleteTransaction(transaction models.Transaction, ID int) (models.Transaction, error)
 }
 
 type repositoryLiteratur struct {
@@ -20,18 +22,6 @@ type repositoryLiteratur struct {
 func RepositoryLiteratur(db *gorm.DB) *repository {
 	return &repository{db}
 }
-
-// func (r *repository) CreateLiteratur(literatur models.Literatur) (models.Literatur, error) {
-// 	err := r.db.Preload("User").Create(&literatur).Error
-
-// 	return literatur, err
-// }
-
-// func (r *repository) CreateLiteratur(literatur models.Literatur) (models.Literatur, error) {
-// 	err := r.db.Create(&literatur).Error
-
-// 	return literatur, err
-// }
 
 func (r *repository) CreateLiteratur(literatur models.Literatur) (models.Literatur, error) {
 	err := r.db.Create(&literatur).Error

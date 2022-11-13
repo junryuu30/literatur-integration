@@ -29,21 +29,79 @@ const handleChange = (e) => {
 
 const handleSubmit = useMutation(async (e) =>{
   try{
-    e.preventDefault()
+    // e.preventDefault()
 
-    const data = await API.post("/login", form)
+    // const data = await API.post("/login", form)
 
-    const alert = <Alert variant="success">Login
-    Sukses</Alert>;
-    setMessage(alert);
+    // const alert = <Alert variant="success">Login
+    // Sukses</Alert>;
+    // setMessage(alert);
 
-    let payload = data.data.data;
+    // let payload = data.data.data;
 
-    dispatch({
-      type:"LOGIN_SUCCESS",
-      payload,
-    })
-    navigate("/search");
+
+
+
+
+
+    // dispatch({
+    //   type:"LOGIN_SUCCESS",
+    //   payload,
+    // })
+    // navigate("/search");
+    // =================================================
+    // newwwwwwwwww
+          e.preventDefault();
+
+            // Data body
+            const body = JSON.stringify(form);
+
+            // Configuration
+            const config = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: body,
+            };
+
+            // Insert data for login process
+            const response = await API.post("/login", body, config);
+
+            console.log(response);
+
+            // Checking process
+            if (response.data.code == 200) {
+                // Send data to useContext
+                dispatch({
+                    type: "LOGIN_SUCCESS",
+                    payload: response.data.data,
+                });
+
+                // Status check
+                if (response.data.data.status === "admin") {
+                    navigate("/verification")
+                } else {
+                    navigate("/search");
+                }
+            } else {
+                const alert = (
+                    <Alert variant="danger" className="py-1">
+                        Login failed
+                    </Alert>
+                );
+                console.log("else")
+
+                setMessage(alert);
+            }
+
+
+
+
+    // ==============================
+
+
+
     setModalLogin(false)
   } catch (err){
     console.log(err)

@@ -1,5 +1,5 @@
 import { Button, Container, Dropdown, Navbar, Table } from "react-bootstrap"
-import React from 'react'
+import React, { useEffect } from 'react'
 import ceklis from "../../src/assets/ceklis.png"
 import logo from "../../src/assets/logo.svg"
 import jen from "../assets/jen.jpg"
@@ -15,12 +15,20 @@ const BookVerification =()=>{
         return response.data.data
       }
     )
+  //   React.useEffect(() => {
+  //     refetch()
+  // }, [])
 
+//   useEffect(() => {
+//     refetch()
+// }, [])
     return(
         <>
         <Navbar className="bg-black nav" bg="dark" variant="dark">
           <Container>
-          <Navbar.Brand>
+          <Navbar.Brand
+          onClick={()=>navigate("/search-result")}
+          >
             <img src={logo} alt=''/>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -70,8 +78,14 @@ const BookVerification =()=>{
                         <td>{item?.isbn}</td>
                         <td>{item?.title}.pdf</td>
                         <td>Approve</td>
-                        <td>
-                            <img src={ceklis} alt=""/>
+                        <td className="d-flex justify-content-center">
+                            <button className="btn bg-maroon text-white fw-bold w-30 me-3"
+                              onClick={async () => {
+                                const response = await API.delete(`/literatur/${item.id}`);
+                                // refetch()
+                            }}
+                            >Cancel</button>
+                            <button className="btn btn-success text-dark fw-bold w-30" >Approv</button>
                         </td>
                     </tr>
                       ))}
@@ -81,19 +95,8 @@ const BookVerification =()=>{
                         <td>Thornton</td>
                         <td>@fat</td>
                         <td>Approve</td>
-                        <td>
-                            <img src={ceklis} alt=""/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        <td>Approve</td>
                         <td className="d-flex justify-content-center">
-                            <button className="btn bg-maroon text-white fw-bold w-30 me-3">Cancel</button>
-                            <button className="btn btn-success text-dark fw-bold w-30" >Approv</button>
+                          <img src={ceklis} alt=""/>
                         </td>
                     </tr>
                 </tbody>
