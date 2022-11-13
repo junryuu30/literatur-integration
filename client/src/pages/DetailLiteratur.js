@@ -87,32 +87,11 @@ function DetailLiteratur() {
                             </Col>
                             <Col>
                                 <Button className="bg-maroon btn-auth w-30 mb-3"
-                                
+                                onClick={handleOnSave}
                                 >
                                     Add My Collection
                                 </Button>
-
-                                {/* <span className='pe-1' onClick={(e) => {
-                                                Swal.fire({
-                                                    title: 'Do you want to save this literatur?',
-                                                    showDenyButton: true,
-                                                    showCancelButton: true,
-                                                    confirmButtonText: 'Save',
-                                                    denyButtonText: `Don't save`,
-                                                }).then((result) => {
-                                                    /* Read more about isConfirmed, isDenied below */
-                                                    if (result.isConfirmed) {
-                                                        Swal.fire({
-                                                            icon: "success",
-                                                            title: "Success!",
-                                                            showConfirmButton: true,
-                                                            onClick: handleOnSave(e, literatur.id),
-                                                        });
-                                                    } else if (result.isDenied) {
-                                                        Swal.fire('Collection are not saved', '', 'info')
-                                                    }
-                                                })
-                                            }}>holla</span> */}
+                                            
                                 {/* ================== */}
                             </Col>
                         </Row>
