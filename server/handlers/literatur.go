@@ -47,14 +47,15 @@ func (h *handlerLiteratur) CreateLiteratur(w http.ResponseWriter, r *http.Reques
 	pages, _ := strconv.Atoi(r.FormValue("pages"))
 
 	request := literaturdto.CreateLiteratureRequest{
-		UserID:          user_id,
-		Title:           r.FormValue("title"),
-		PublicationDate: r.FormValue("publication_date"),
-		Pages:           pages,
-		ISBN:            r.FormValue("isbn"),
-		Author:          r.FormValue("author"),
-		Attache:         filename,
-		Cover:           filepath,
+		UserID:             user_id,
+		Title:              r.FormValue("title"),
+		PublicationDate:    r.FormValue("publication_date"),
+		Pages:              pages,
+		ISBN:               r.FormValue("isbn"),
+		Author:             r.FormValue("author"),
+		Attache:            filename,
+		Cover:              filepath,
+		Statusverification: "pending",
 	}
 	var ctx = context.Background()
 	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
@@ -82,14 +83,15 @@ func (h *handlerLiteratur) CreateLiteratur(w http.ResponseWriter, r *http.Reques
 	// pages, _ := strconv.Atoi(r.FormValue("pages"))
 
 	literatur := models.Literatur{
-		Title:           request.Title,
-		PublicationDate: request.PublicationDate,
-		Pages:           pages,
-		ISBN:            request.ISBN,
-		Author:          request.Author,
-		Attache:         filename,
-		Cover:           resp.SecureURL,
-		UserID:          user_id,
+		Title:              request.Title,
+		PublicationDate:    request.PublicationDate,
+		Pages:              pages,
+		ISBN:               request.ISBN,
+		Author:             request.Author,
+		Attache:            filename,
+		Cover:              resp.SecureURL,
+		UserID:             user_id,
+		Statusverification: request.Statusverification,
 	}
 
 	literatur, err = h.LiteraturRepository.CreateLiteratur(literatur)
@@ -185,6 +187,27 @@ func (h *handlerLiteratur) FindLiteraturs(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(response)
 }
 
+func (h *handlerLiteratur) FindLiteratursApprove(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	literaturs, err := h.LiteraturRepository.FindLiteratursApprove()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	// Create Embed Path File on Image property here ...
+	for i, p := range literaturs {
+		literaturs[i].Attache = os.Getenv("PATH_FILE") + p.Attache
+	}
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Code: http.StatusOK, Data: literaturs}
+	json.NewEncoder(w).Encode(response)
+}
+
 func (h *handlerLiteratur) GetLiteraturByUserID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	id, _ := strconv.Atoi(mux.Vars(r)["userId"])
@@ -212,4 +235,30 @@ func convertResponseLiteratur(u models.Literatur) models.LiteraturResponse {
 		Author:          u.Author,
 		Attache:         u.Attache,
 	}
+}
+
+func (h *handlerLiteratur) UpdateLiteratur(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	request := literaturdto.UpdateLiteraturRequest{
+		Statusverification: r.FormValue("statusverification"),
+	}
+	literatur := models.Literatur{}
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	if request.Statusverification != "" {
+		literatur.Statusverification = request.Statusverification
+	}
+
+	literatur, err := h.LiteraturRepository.UpdateLiteratur(literatur, id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Status: "Success", Data: literatur}
+	json.NewEncoder(w).Encode(response)
 }

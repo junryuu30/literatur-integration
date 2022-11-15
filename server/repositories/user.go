@@ -30,13 +30,21 @@ func (r *repository) CreateUser(user models.User) (models.User, error) {
 func (r *repository) FindUsers() ([]models.User, error) {
 	var users []models.User
 	err := r.db.Find(&users).Error
+	// err := r.db.Preload("Literatur.User").Preload("Collection.User").Find(&users).Error
 
 	return users, err
 }
 
+// func (r *repository) GetUser(ID int) (models.User, error) {
+// 	var user models.User
+// 	err := r.db.First(&user, ID).Error
+
+// 	return user, err
+// }
+
 func (r *repository) GetUser(ID int) (models.User, error) {
 	var user models.User
-	err := r.db.First(&user, ID).Error
+	err := r.db.Preload("Literatur.User").Preload("Collection.User").First(&user, ID).Error
 
 	return user, err
 }

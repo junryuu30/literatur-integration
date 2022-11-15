@@ -12,6 +12,7 @@ type CollectionRepository interface {
 	GetCollection(ID int) (models.Collection, error)
 	UpdateCollection(User models.Collection) (models.Collection, error)
 	DeleteCollection(User models.Collection) (models.Collection, error)
+	GetCollectionByUserID(userID int) ([]models.Collection, error)
 }
 
 func RepositoryCollection(db *gorm.DB) *repository {
@@ -32,7 +33,7 @@ func (r *repository) FindCollection() ([]models.Collection, error) {
 func (r *repository) GetCollection(ID int) (models.Collection, error) {
 	var collection models.Collection
 	err := r.db.Preload("User").Preload("Literatur.User").First(&collection, ID).Error
-	// err := r.db.Preload("User").Preload("Literatur.User").Where("user_id = ?", UserID).Find(&collection).Error
+	// err := r.db.Preload("User").Preload("Literatur.User").Where("user_id = ?", User ID).Find(&collection).Error
 
 	return collection, err
 }
@@ -47,4 +48,11 @@ func (r *repository) DeleteCollection(collection models.Collection) (models.Coll
 	err := r.db.Preload("User").Preload("Literatur.User").Delete(&collection).Error
 
 	return collection, err
+}
+
+func (r *repository) GetCollectionByUserID(userID int) ([]models.Collection, error) {
+	var collections []models.Collection
+	err := r.db.Debug().Preload("User").Preload("Literatur").Where("user_id= ?", userID).Find(&collections).Error
+
+	return collections, err
 }
