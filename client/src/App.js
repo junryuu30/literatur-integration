@@ -33,20 +33,19 @@ function App() {
   //   if (state.isLogin === false && !isLoading) {
   //     navigate("/");
   //   }
+
   // }, [state]);
 
+
+
+
   const checkUser = async () => {
+    console.log(localStorage.token);
     if (localStorage.token) {
       setAuthToken(localStorage.token);
     }
     try {
       const response = await API.get("/check-auth");
-      // If the token incorrect
-      if (response.status === 404) {
-        return dispatch({
-          type: "AUTH_ERROR",
-        });
-      }
 
       // Get user data
       let payload = response.data.data;
@@ -78,15 +77,11 @@ function App() {
           <Route exac path="/" element={<Home />} />
           <Route exac path="/search" element={<Search />} />
           <Route exac path="/search-result" element={<SearchResult />} />
-          <Route exac path="/profile" element={<Profile />} />
+          <Route exac path="/profile/:id" element={<Profile />} />
           <Route exac path="/edit-profile/:id" element={<EditProfile />} />
           <Route exac path="/my-collection/:id" element={<MyCollection />} />
           <Route exac path="/add-literature" element={<AddLiterature />} />
-          <Route
-            exac
-            path="/detail-literature/:id"
-            element={<DetailLiteratur />}
-          />
+          <Route exac path="/detail-literature/:id"element={<DetailLiteratur />}/>
           <Route exac path="/verification" element={<BookVerification />} />
           {/* <Route path='/edit-profile/:id' render={() => <EditProfile/>}/> */}
         </Routes>

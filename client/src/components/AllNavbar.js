@@ -9,11 +9,12 @@ const AllNavbar = () => {
   const navigate = useNavigate();
 
   const [state, dispatch] = useContext(UserContext);
+ 
   const [user, setUser] = useState(null);
 
   const getUser = async () => {
     try{
-      const response = await API.get(`/user/${state.user.id}`);
+      const response = await API.get(`/user`);
 
       setUser(response.data.data.data);
       // console.log("isi response", response);
@@ -22,14 +23,9 @@ const AllNavbar = () => {
     }
    
   };
-  // console.log(user, "isi user");
 
-  // useEffect(() => {
-  //   if (state.user) {
-  //     getUser();
-  //   }
-  // }, [state]);
-
+  console.log(state);
+  
   useEffect(()=>{
     getUser()
   },[])
@@ -48,30 +44,33 @@ const AllNavbar = () => {
         <Navbar className="bg-black nav" bg="dark" variant="dark">
           <Container>
             <Nav className="me-auto">
-            {/* <Link to={`/profile/${state.user.id}`}> */}
               <Nav.Link
-                onClick={() => navigate("/profile")}
-                // onClick={() => navigate("/profile/"+ state.user.id)}
+                onClick={() => navigate(`/profile/${state.user.id}`)}
               >Profile</Nav.Link>
               <Nav.Link
-              // onClick={() => navigate("/my-collection")}
               onClick={() => navigate(`/my-collection/${state.user.id}`)}
               >My Collection</Nav.Link>
               <Nav.Link
               onClick={() => navigate("/add-literature")}
               >Add Literature</Nav.Link>
               <Nav.Link
-              // onClick={()=> navigate('/')}
               onClick={handleLogut}
               >Logout</Nav.Link>
               
+              
+              
             </Nav>
             <Navbar.Collapse className="justify-content-end">
+              {state.user.status === "admin" ? (
+              <Nav.Link className="text-white"
+                  onClick={() => navigate("/verification")}
+                  >Verification</Nav.Link>
+                ): (<></>)}
             <Navbar.Text
             onClick={()=>navigate("/search")}
             >
-            <img src={logo} alt=""
-            w={12}
+            <img src={logo} alt="" 
+            w={10}
             />
             </Navbar.Text>
           </Navbar.Collapse>

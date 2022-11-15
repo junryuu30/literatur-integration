@@ -34,4 +34,5 @@ type CheckAuthResponse struct {
 	Phone    string `json:"phone" gorm:"type: varchar(255)"`
 	Address  string `json:"address" gorm:"type: varchar(255)"`
 	Image    string `json:"image" gorm:"type:varchar(255)"`
+	Status   string `json:"status" gorm:"type:varchar(255)"`
 }

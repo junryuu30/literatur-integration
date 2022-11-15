@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AllNavbar from "../components/AllNavbar";
 import { UserContext } from "../components/context/userContext";
 import { API } from "../config/api";
 
 const EditProfile = () => {
-    
+    const { id } = useParams()
     const navigate = useNavigate()
     const [state] = useContext(UserContext)
     const [preview, setPreview] = useState(null)
+
+
+
 
     const [form, setForm] = useState(
     {
@@ -23,8 +26,8 @@ const EditProfile = () => {
     })
     
 
-    let { data: userprofile } = useQuery("editprofileCache", async ()=>{
-        const response = await API.get(`user/${state.user.id}`);
+    let { data: userprofile, refetch } = useQuery("editprofileCache", async ()=>{
+        const response = await API.get(`/user`);
 
         console.log("data sebelum di editprofile", response.data.data)
         return response.data.data;
@@ -78,20 +81,10 @@ const EditProfile = () => {
     
           // Insert product data
           const response = await API.patch(`/user/${form.id}`, formData);
-    
-        //   const auth = await API.get("/check-auth");
-        //   // console.log(response);
-    
-        //   let payload = auth.data.data;
-        //   payload.token = localStorage.token;
-    
-        //   dispatch({
-        //     type: "USER_SUCCESS",
-        //     payload,
-        //   });
-    
+          
+          refetch()
           console.log("ini data updated user", response.data);
-          navigate("/profile");
+          navigate("/profile/" + id);
         } catch (error) {
           console.log(error);
         }

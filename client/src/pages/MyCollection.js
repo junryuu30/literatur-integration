@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Col, Container, Row } from "react-bootstrap"
+import { Button, Col, Container, Row } from "react-bootstrap"
 import { dataJurnal } from "../dummyData/dataJurnal"
 import fakepdf from "../assets/fakePdf.png"
 import AllNavbar from "../components/AllNavbar"
@@ -18,28 +18,28 @@ const MyCollection = () => {
     const[collection,setCollection]= useState()
 
 
-    let { data: collectionbyuser } = useQuery("collectionbyuseCache", async () => {
-        const response = await API.get("/collections");
-        const response2 = response.data.data.filter(
-            (p) => p.user.id == state.user.id
-          );
-        // console.log("ini data collection id",response)
-        // return response.data.data;
-        setCollection(response2)
-        
-      });
-    // const getCollection = async () =>{
-    //     try {
-    //         const response = await API.get("/collections")
-    //     setCollection(response.data.data)
-    //     } catch (error) {
-    //         console.log(error);
+    console.log("ini data collection iniii:", state)
+
+
+     const getCollection = async () =>{
+        try {
+            const response = await API.get("/collections/user")
+            // const response = await API.get(`/colections/user/${state.user.id}`)
+            // return response.data.data
+            // const response2 = response.data.data.filter(
+            //             (p) => p.user.id == state.user.id
+            //           );
+        // setCollection(response2.data.data)
+        setCollection(response.data.data)
+        console.log("getCollection", response.data.data)
+        } catch (error) {
+            console.log(error);
             
-    //     }
-    // }
-    // useEffect(()=>{
-    //     getCollection()
-    // },[])
+        }
+    }
+    useEffect(()=>{
+        getCollection()
+    },[state])
 
     return(
         <>
@@ -49,51 +49,37 @@ const MyCollection = () => {
             <h2 className="text-white">My Colection</h2>
                 <Row>
                 <Col className="mt-3">
+                    {collection?.length !== undefined ? (
                 <Row>
-                        {collection?.map((item, index)=>(
-                            <Col key={index} 
-                            onClick={() => navigate(`/detail-literature/${item?.id}`)}
-                            className="col-lg-3"
-                            >
-                                <div  className='card-sr'>
-                            <img alt="" src={fakepdf}/>
-                            <div className='mt-3 text-white ms-2'>
-                                <h4>
-                                    {item?.title}
-                                </h4>
-                            </div>
-                            <div className='d-flex justify-content-between mt-1 text-white ms-2' style={{width:"50%"}}>
-                                <p>{item?.author}</p>
-                                <p>{item?.publicationdate}</p>
-                            </div>
-                        </div>
+                        {collection.map((item)=>(
+                            <Col className="col-lg-3">
+                                <div  className='card-sr'
+                                    onClick={() => navigate(`/detail-literature/${item?.id}`)}
+                                >
+                                    <img alt="" src={fakepdf}/>
+                                    <div className='mt-3 text-white ms-2'>
+                                        <h4>
+                                            {item?.literatur.title}
+                                        </h4>
+                                    </div>
+                                    <div className='d-flex justify-content-between mt-1 text-white ms-2' style={{width:"50%"}}>
+                                        <p>{item?.literatur.author}</p>
+                                        <p>{item?.literatur.publication_date}</p>
+                                    </div>
+                                    <Button className="bg-maroon btn-auth w-30 my-4 py-1"
+                                        onClick={async () => {
+                                                const response = await API.delete(`/collection/${item.id}`);
+                                                // refetch()
+                                            }}
+                                        >
+                                            Delete
+                                        </Button>
+                                </div>
                             </Col>
-                        ))}
+                         ))} 
 
                         </Row>
-                    {/* ================ */}
-                        {/* <Row>
-                        {dataJurnal.map((item, index)=>(
-                            <Col key={index} onClick={() => navigate(`/detail-literature/${item?.id}`)}
-                            className="col-lg-3"
-                            >
-                                <div  className='card-sr'>
-                            <img alt="" src={fakepdf}/>
-                            <div className='mt-3 text-white ms-2'>
-                                <h4>
-                                    {item.title}
-                                </h4>
-                            </div>
-                            <div className='d-flex justify-content-between mt-1 text-white ms-2' style={{width:"50%"}}>
-                                <p>{item.penulis}</p>
-                                <p>{item.tahun}</p>
-                            </div>
-                        </div>
-                            </Col>
-                        ))}
-
-                        </Row> */}
-                        
+                    ): null}
                         
                     </Col>
                 </Row>

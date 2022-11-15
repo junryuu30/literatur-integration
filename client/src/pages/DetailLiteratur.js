@@ -28,27 +28,6 @@ function DetailLiteratur() {
 
     })
 
-    // const handleOnSave = async (e, literaturID) => {
-    //     e.preventDefault();
-    //     try {
-    //         console.log("collection yang ini :", state.user.id)
-
-    //         const config = {
-    //             headers: {
-    //                 Authorization: `Bearer ${localStorage.token}`,
-    //             },
-    //         };
-    //         console.log("data check literatur", literaturID, state.user.id);
-
-    //         const response = await API.post("/collection", {
-    //             literatur_id: parseInt(literaturID),
-    //             user_id: parseInt(state.user.id),
-    //         }, config);
-    //         console.log("response post collection", response)
-    //     } catch (error) {
-    //         console.log("ini error di post collection", error)
-    //     }
-    // }
 
     const handleSubmit = async (e) => {
         try {
@@ -63,7 +42,7 @@ function DetailLiteratur() {
                 literatur_id: parseInt(id),
             });
             await API.post("/collection", body, config);
-            navigate("/my-collection");
+            navigate(`/my-collection/${state.user.id}`);
         } catch (error) {
             console.log(error);
         }

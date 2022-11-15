@@ -108,49 +108,6 @@ func (h *handlerCollection) GetCollection(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(response)
 }
 
-// func (h *handlerCollection) DeleteCollection(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-
-// 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
-// 	collection, err := h.CollectionRepository.GetCollection(id)
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-// 		json.NewEncoder(w).Encode(response)
-// 		return
-// 	}
-
-// 	// data, err := h.GetCollection.DeleteBookmark(bookmark)
-// 	data, err := h.GetCollection.DeleteCollection(collection)
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-// 		json.NewEncoder(w).Encode(response)
-// 		return
-// 	}
-
-// 	w.WriteHeader(http.StatusOK)
-// 	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponseCollection(collection)}
-// 	json.NewEncoder(w).Encode(response)
-// }
-
-// func (h *handlerLiteratur) GetLiteraturByUserID(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-// 	id, _ := strconv.Atoi(mux.Vars(r)["userId"])
-
-// 	var literaturs []models.Literatur
-// 	literaturs, err := h.LiteraturRepository.GetLiteraturByUserID(id)
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-// 		json.NewEncoder(w).Encode(response)
-// 		return
-// 	}
-// 	w.WriteHeader(http.StatusOK)
-// 	response := dto.SuccessResult{Status: "Success", Data: literaturs}
-// 	json.NewEncoder(w).Encode(response)
-// }
-
 func (h *handlerCollection) GetCollectionByUserID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
@@ -167,5 +124,49 @@ func (h *handlerCollection) GetCollectionByUserID(w http.ResponseWriter, r *http
 	}
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "Success", Data: collections}
+	json.NewEncoder(w).Encode(response)
+}
+
+func (h *handlerCollection) DeleteCollection(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	collection, err := h.CollectionRepository.GetCollection(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	data, err := h.CollectionRepository.DeleteCollection(collection)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponseCollection(data)}
+	json.NewEncoder(w).Encode(response)
+}
+
+func (h *handlerCollection) GetCollectionByLiteratur(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	var collection []models.Collection
+	collection, err := h.CollectionRepository.GetCollectionByLiteratur(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Code: http.StatusOK, Data: collection}
 	json.NewEncoder(w).Encode(response)
 }

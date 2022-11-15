@@ -15,57 +15,67 @@ import { UserContext } from "../components/context/userContext";
 
 const Profile = () => {
   const [state] = React.useContext(UserContext);
-  console.log("ini stateeee", state);
+  // console.log("ini stateeee", state);
   // const params = useParams();
   const { id } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = React.useState();
 
-  var idid = state.user.id;
+  // var idid = state.user.id;
 
-  let { data: literaturbyuser, refetch } = useQuery(
-    "literaturbyuserCache",
-    async () => {
-      const responseliteratur = await API.get(`/user/${id}`);
+  // let { data: literaturbyuser, refetch } = useQuery(
+    // "literaturbyuserCache",
+    // async () => {
+      // const responseliteratur = await API.get(`/user/${id}`);
       // `/literaturs/user/${params.id ? params.id : user.id}`
       // console.log("ini dataatata my lit  eratur.data2:", responseliteratur.data.data)
-      return responseliteratur.data.data;
-    }
-  );
+      // return responseliteratur.data.data;
+    // }
+  // );
 
   // LITERATURby user
+
+  // console.log(id);
+
+  const config = {
+    method: "GET",
+    headers: {
+      Authorization: "Basic " + localStorage.token,
+    },
+  };
+
   let { data: literturID } = useQuery("literaturbyuserCache2", async () => {
-    const responseliteratur = await API.get(`/literaturs/user/${state.user.id}`);
-    console.log("jhihan user id,", state.user.id);
-    console.log("jihan response literature hehe,", responseliteratur.data.data);
+    const responseliteratur = await API.get(`/literaturs/user/${id}`, config);
+    // console.log("jhihan user id,", state.user.id);
+    // console.log("jihan response literature hehe,", responseliteratur.data.data);
     return responseliteratur.data.data;
   });
   // console.log("ini data literatur id", literaturbyuser)
 
-  console.log(literturID);
+  console.log("ini data literatur",literturID);
 
   const getUser = async () => {
     try {
-      const response = await API.get("/user/" + state?.user?.id);
+
+      const response = await API.get("/user", config);
+
+      console.log('bebas response',response);
       // console.log("data get user", response.data.data)
       // const response = await API.get(`/user/${state.user.id}`)
-      setUser(response.data.data);
-      console.log(`func getUser : ${response.data.data}`);
+        setUser(response.data.data);
+      // console.log(`func getUser : ${response.data.data}`);
     } catch (err) {
       console.log(err);
     }
   };
-
-  // React.useEffect(() => {
-  //   if (state.user) {
-  //     getUser();
-  //   }
-  // }, [state]);
+  console.log("ini userrrr", user)
 
   React.useEffect(() => {
+
     getUser();
-    refetch();
   }, []);
+
+  
   return (
     <>
       <AllNavbar />
@@ -83,7 +93,8 @@ const Profile = () => {
                 </Col>
                 <Col className="col-11">
                   <p className="ff-avn fs-14 fw-bold m-0 text-white">
-                    {state.user?.email}
+                    {/* {state.user?.email} */}
+                    {user?.email}
                   </p>
                   <p className="fs-12" style={{ color: "#8A8C90" }}>
                     Email
@@ -100,8 +111,8 @@ const Profile = () => {
                 </Col>
                 <Col className="col-11">
                   <p className="ff-avn fs-14 fw-bold m-0">
-                    {/* {user?.gender ? user?.gender : "unknown"} */}
-                    {state.user?.gender}
+                    {user?.gender ? user?.gender : "unknown"}
+                    {/* {state.user?.gender} */}
                   </p>
                   <p className="fs-12" style={{ color: "#8A8C90" }}>
                     Gender
@@ -118,8 +129,8 @@ const Profile = () => {
                 </Col>
                 <Col className="col-11">
                   <p className="ff-avn fs-14 fw-bold m-0">
-                    {/* {user?.phone ? user?.phone : "unknown"} */}
-                    {state.user?.phone}
+                    {user?.phone ? user?.phone : "unknown"}
+                    {/* {state.user?.phone} */}
                   </p>
                   <p className="fs-12" style={{ color: "#8A8C90" }}>
                     Mobile Phone
@@ -136,8 +147,8 @@ const Profile = () => {
                 </Col>
                 <Col className="col-11">
                   <p className="ff-avn fs-14 fw-bold m-0">
-                    {/* {user?.address ? user?.address : "unknown"} */}
-                    {state.user?.address}
+                    {user?.address ? user?.address : "unknown"}
+                    {/* {state.user?.address} */}
                   </p>
                   <p className="fs-12" style={{ color: "#8A8C90" }}>
                     Adress
@@ -148,8 +159,8 @@ const Profile = () => {
 
             <Col className="col-lg-3">
               <div>
-                {/* <img src={user?.image ? user?.image : jen} alt="" style={{ width: "100%" }} /> */}
-                <img src={state.user?.image} alt="" style={{ width: "100%" }} />
+                <img src={user?.image ? user?.image : jen} alt="" style={{ width: "100%" }} />
+                {/* <img src={state.user?.image} alt="" style={{ width: "100%" }}/> */}
               </div>
               {/* <Button
                 className="mt-3 bg-maroon"

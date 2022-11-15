@@ -163,6 +163,7 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 		Phone:    user.Phone,
 		Address:  user.Address,
 		Image:    user.Image,
+		Status:   user.Status,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

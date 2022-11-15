@@ -13,14 +13,28 @@ import { API } from '../config/api'
 function SearchResult() {
     const navigate = useNavigate()
     const [query, setQuery] = useState("")
+    const [form, setForm] = React.useState({
+        year:'',
+      });
+
+  const { year } = form;
+
+
+      const handleChange = (e) => {
+        setForm({
+          ...form,
+          [e.target.name]: e.target.value,
+        })
+      }
 
     let { data: searchs }= useQuery('searchliteraturCache',
       async() => {
-        const response = await API.get('/literaturs')
+        const response = await API.get('/literaturs/approve')
         return response.data.data
       }
     )
 
+    console.log("ini data literatur", searchs)
   return (
     <>
         <AllNavbar/>
@@ -46,14 +60,15 @@ function SearchResult() {
                 <Row>
                     <Col className="col-12 col-lg-2 me-3">
                         <h5 className='text-danger mb-2'>Anytime</h5>
-                        <Form.Select aria-label="Default select example">
-                            <option>Since Tahun</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                        <Form.Select aria-label="Default select example" value={year} name="year" onChange={(e)=> setQuery(e.target.value)}>
+                            <option value="">Since Tahun</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2022</option>
                         </Form.Select>
                     </Col>
                     <Col className="mt-3">
+
                         <Row>
 
                         {/* {searchs?.map((item, index)=>( */}

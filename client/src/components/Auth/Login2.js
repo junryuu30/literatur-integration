@@ -67,6 +67,7 @@ const handleSubmit = useMutation(async (e) =>{
 
             // Insert data for login process
             const response = await API.post("/login", body, config);
+            // localStorage.setItem('token', response.data.data.token)
 
             console.log(response);
 

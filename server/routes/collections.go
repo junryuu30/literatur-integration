@@ -18,4 +18,6 @@ func CollectionRoutes(r *mux.Router) {
 	r.HandleFunc("/collection/{id}", h.GetCollection).Methods("GET")
 	r.HandleFunc("/collections", h.FindCollection).Methods("GET")
 	r.HandleFunc("/collections/user", middleware.Auth(h.GetCollectionByUserID)).Methods("GET")
+	r.HandleFunc("/collection/{id}", middleware.Auth(h.DeleteCollection)).Methods("DELETE")
+	r.HandleFunc("/collectionLiteratur/{id}", h.GetCollectionByLiteratur).Methods("GET")
 }
